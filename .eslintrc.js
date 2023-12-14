@@ -86,6 +86,7 @@ module.exports = {
           },
         ],
         "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/array-type": "off",
       },
     },
 
