@@ -1,19 +1,11 @@
+import { prisma } from "~/db.server";
+
 export type Post = {
   slug: string;
   title: string;
+  markdown: string;
 };
 
 export const getPosts = async () => {
-  const posts = [
-    {
-      slug: "my-first-post",
-      title: "My First Post!",
-    },
-    {
-      slug: "trail-riding-with-onewheel",
-      title: "Trail Riding with Onewheel",
-    },
-  ];
-
-  return posts;
+  return prisma.post.findMany();
 };
