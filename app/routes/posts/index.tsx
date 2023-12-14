@@ -3,10 +3,14 @@ import { Link, useLoaderData } from "@remix-run/react";
 
 import { getPosts } from "~/models/post.server";
 
+type LoaderData = {
+  posts: Awaited<ReturnType<typeof getPosts>>;
+};
+
 export const loader = async () => {
   const posts = await getPosts();
 
-  return json({ posts });
+  return json<LoaderData>({ posts });
 };
 
 const PostsRoute = () => {
