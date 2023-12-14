@@ -18,3 +18,9 @@ export const getPostListings = async () => {
 export const getPosts = async () => {
   return prisma.post.findMany();
 };
+
+export const getPostBySlug = async (slug: string) => {
+  return prisma.post.findUnique({
+    where: { slug },
+  });
+};
