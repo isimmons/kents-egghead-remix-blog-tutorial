@@ -6,6 +6,15 @@ export type Post = {
   markdown: string;
 };
 
+export const getPostListings = async () => {
+  return prisma.post.findMany({
+    select: {
+      slug: true,
+      title: true,
+    },
+  });
+};
+
 export const getPosts = async () => {
   return prisma.post.findMany();
 };
