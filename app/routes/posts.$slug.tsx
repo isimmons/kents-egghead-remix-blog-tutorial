@@ -5,15 +5,20 @@ import { marked } from "marked";
 import { getPostBySlug } from "~/models/post.server";
 import { invariantResponse } from "~/utils";
 
+export type LoaderData = {
+  title: string;
+  content: string;
+};
+
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { slug } = params;
-  invariantResponse(slug, "Post Not Found", { status: 404 });
+  invariantResponse(slug, "Slug is required");
 
   const post = await getPostBySlug(slug);
-  invariantResponse(post, "Post Not Found", { status: 404 });
+  invariantResponse(post, `Post Not Found: ${slug}`, { status: 404 });
 
-  const content = marked(post.markdown);
-  return json({ title: post?.title, content });
+  const content = await marked(post.markdown);
+  return json<LoaderData>({ title: post.title, content });
 };
 
 const PostRoute = () => {
