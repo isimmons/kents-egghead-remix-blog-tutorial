@@ -1,3 +1,6 @@
+Updated version of Kent's free egghead.io blog tutorial, WIP
+current task [add delete functionality](https://egghead.io/lessons/remix-add-delete-functionality-to-posts-page-in-remix)
+
 # Remix Indie Stack
 
 ![The Remix Indie Stack](https://repository-images.githubusercontent.com/465928257/a241fa49-bd4d-485a-a2a5-5cb8e4ee0abf)
