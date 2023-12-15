@@ -13,9 +13,12 @@ import { invariantResponse } from "~/utils";
 const inputClassName =
   "w-full rounded border border-gray-500 px-2 py-1 text-lg";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   await requireAdminUser(request);
-  return json({});
+
+  if (params.slug === "new") return json({});
+
+  return json({ post: null });
 };
 
 export type ActionData =
@@ -26,7 +29,7 @@ export type ActionData =
     }
   | undefined;
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   await requireAdminUser(request);
   const formData = await request.formData();
 
@@ -48,7 +51,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   invariantResponse(typeof title === "string");
   invariantResponse(typeof slug === "string");
   invariantResponse(typeof markdown === "string");
-  await createPost({ title, slug, markdown });
+
+  if (params.slug === "new") {
+    await createPost({ title, slug, markdown });
+  } else {
+    // todo: update post
+  }
 
   return redirect("/posts/admin");
 };
