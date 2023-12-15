@@ -1,7 +1,28 @@
+import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
+
+import { createPost } from "~/models/post.server";
+import { invariantResponse } from "~/utils";
 
 const inputClassName =
   "w-full rounded border border-gray-500 px-2 py-1 text-lg";
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+
+  const title = formData.get("title");
+  const slug = formData.get("slug");
+  const markdown = formData.get("markdown");
+
+  // need to validate, using invariantResponse for now
+  invariantResponse(typeof title === "string");
+  invariantResponse(typeof slug === "string");
+  invariantResponse(typeof markdown === "string");
+
+  await createPost({ title, slug, markdown });
+
+  return redirect("/posts/admin");
+};
 
 const NewPostRoute = () => {
   return (

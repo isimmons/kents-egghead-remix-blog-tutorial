@@ -24,3 +24,7 @@ export const getPostBySlug = async (slug: string) => {
     where: { slug },
   });
 };
+
+export const createPost = async (post: Post) => {
+  return prisma.post.create({ data: post });
+};
