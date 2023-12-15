@@ -1,11 +1,22 @@
-import { redirect, type ActionFunctionArgs, json } from "@remix-run/node";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  json,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 
 import { createPost } from "~/models/post.server";
+import { requireAdminUser } from "~/session.server";
 import { invariantResponse } from "~/utils";
 
 const inputClassName =
   "w-full rounded border border-gray-500 px-2 py-1 text-lg";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await requireAdminUser(request);
+  return json({});
+};
 
 export type ActionData =
   | {
@@ -16,6 +27,7 @@ export type ActionData =
   | undefined;
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  await requireAdminUser(request);
   const formData = await request.formData();
 
   const title = formData.get("title");
