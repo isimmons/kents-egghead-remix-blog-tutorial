@@ -1,10 +1,6 @@
-import { prisma } from "~/db.server";
+import { type Post } from "@prisma/client";
 
-export type Post = {
-  slug: string;
-  title: string;
-  markdown: string;
-};
+import { prisma } from "~/db.server";
 
 export const getPostListings = async () => {
   return prisma.post.findMany({
@@ -25,6 +21,8 @@ export const getPostBySlug = async (slug: string) => {
   });
 };
 
-export const createPost = async (post: Post) => {
+export const createPost = async (
+  post: Pick<Post, "slug" | "title" | "markdown">,
+) => {
   return prisma.post.create({ data: post });
 };
