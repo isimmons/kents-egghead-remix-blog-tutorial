@@ -3,7 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 
 import { getPostListings } from "~/models/post.server";
 
-type LoaderData = {
+export type LoaderData = {
   posts: Awaited<ReturnType<typeof getPostListings>>;
 };
 
