@@ -1,5 +1,5 @@
 import { redirect, type ActionFunctionArgs, json } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 
 import { createPost } from "~/models/post.server";
 import { invariantResponse } from "~/utils";
@@ -43,6 +43,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 const NewPostRoute = () => {
   const errors = useActionData<typeof action>();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === "submitting";
 
   return (
     <Form method="POST">
@@ -79,9 +81,10 @@ const NewPostRoute = () => {
       <p className="text-right">
         <button
           type="submit"
-          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+          disabled={isSubmitting}
+          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 focus:bg-blue-400 disabled:bg-blue-300 disabled:text-gray-400"
         >
-          Create Post
+          {isSubmitting ? "Creating post..." : "Create Post"}
         </button>
       </p>
     </Form>
