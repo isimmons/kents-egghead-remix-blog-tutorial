@@ -33,3 +33,7 @@ export const updatePost = async (
 ) => {
   return prisma.post.update({ data: post, where: { slug } });
 };
+
+export const deletePost = async (slug: string) => {
+  return prisma.post.delete({ where: { slug } });
+};

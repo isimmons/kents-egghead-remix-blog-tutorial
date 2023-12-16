@@ -11,7 +11,12 @@ import {
   useNavigation,
 } from "@remix-run/react";
 
-import { createPost, getPostBySlug, updatePost } from "~/models/post.server";
+import {
+  createPost,
+  deletePost,
+  getPostBySlug,
+  updatePost,
+} from "~/models/post.server";
 import { requireAdminUser } from "~/session.server";
 import { invariantResponse } from "~/utils";
 
@@ -43,6 +48,14 @@ export type ActionData =
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   await requireAdminUser(request);
   const formData = await request.formData();
+  const intent = formData.get("intent");
+  invariantResponse(params.slug, "slug is required");
+
+  if (intent === "delete") {
+    await deletePost(params.slug);
+
+    return redirect("/posts/admin");
+  }
 
   const title = formData.get("title");
   const slug = formData.get("slug");
@@ -65,7 +78,7 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
   if (params.slug === "new") {
     await createPost({ title, slug, markdown });
-  } else if (params.slug && params.slug !== "") {
+  } else {
     await updatePost(params.slug, { title, slug, markdown });
   }
 
@@ -78,6 +91,7 @@ const NewPostRoute = () => {
   const navigation = useNavigation();
   const isSubmitting = navigation.formData?.get("intent") === "create";
   const isUpdating = navigation.formData?.get("intent") === "update";
+  const isDeleting = navigation.formData?.get("intent") === "delete";
   const isNewPost = !data.post;
 
   return (
@@ -123,7 +137,18 @@ const NewPostRoute = () => {
           className={`${inputClassName} font-mono`}
         ></textarea>
       </p>
-      <p className="text-right">
+      <div className="flex justify-end gap-4">
+        {isNewPost ? null : (
+          <button
+            type="submit"
+            name="intent"
+            value="delete"
+            disabled={isDeleting}
+            className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600 focus:bg-red-400 disabled:bg-red-300 disabled:text-gray-400"
+          >
+            {isDeleting ? "Deleting..." : "Delete Post"}
+          </button>
+        )}
         <button
           type="submit"
           name="intent"
@@ -138,7 +163,7 @@ const NewPostRoute = () => {
             : null}
           {isNewPost ? null : isUpdating ? "Updating..." : "Update Post"}
         </button>
-      </p>
+      </div>
     </Form>
   );
 };
