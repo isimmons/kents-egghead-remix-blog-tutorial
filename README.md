@@ -1,5 +1,5 @@
 Updated version of Kent's free egghead.io blog tutorial, WIP
-current task [add delete functionality](https://egghead.io/lessons/remix-add-delete-functionality-to-posts-page-in-remix)
+current task [handle 404s with catch boundaries](https://egghead.io/lessons/remix-handle-404s-in-remix-with-catchboundaries)
 
 # Remix Indie Stack
 
