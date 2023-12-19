@@ -6,9 +6,12 @@ import {
 } from "@remix-run/node";
 import {
   Form,
+  isRouteErrorResponse,
   useActionData,
   useLoaderData,
   useNavigation,
+  useParams,
+  useRouteError,
 } from "@remix-run/react";
 
 import {
@@ -32,7 +35,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (slug === "new") return json({ post: null });
 
   const post = await getPostBySlug(slug);
-  invariantResponse(post, "Post Not Found");
+  invariantResponse(post, "Post Not Found", { status: 404 });
 
   return json({ post });
 };
@@ -166,6 +169,20 @@ const NewPostRoute = () => {
       </div>
     </Form>
   );
+};
+
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+  const params = useParams();
+
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 404) {
+      return (
+        <div>{`Uh oh! A post with slug '${params.slug}' does not exist!`}</div>
+      );
+    }
+    throw new Error(`Unsupported thrown response status code: ${error.status}`);
+  }
 };
 
 export default NewPostRoute;
