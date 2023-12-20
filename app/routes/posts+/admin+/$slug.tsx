@@ -182,6 +182,13 @@ export const ErrorBoundary = () => {
       );
     }
     throw new Error(`Unsupported thrown response status code: ${error.status}`);
+  } else if (error instanceof Error) {
+    return (
+      <>
+        <div className="text-red-500">Oh no, something went wrong!</div>
+        <pre>{error.message}</pre>
+      </>
+    );
   }
 };
 

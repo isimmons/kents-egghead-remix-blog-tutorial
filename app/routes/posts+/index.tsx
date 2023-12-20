@@ -1,5 +1,5 @@
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useRouteError } from "@remix-run/react";
 
 import { getPostListings } from "~/models/post.server";
 import { useOptionalAdminUser } from "~/utils";
@@ -41,6 +41,19 @@ const PostsRoute = () => {
       </ul>
     </main>
   );
+};
+
+export const ErrorBoundary = () => {
+  const error = useRouteError();
+
+  if (error instanceof Error) {
+    return (
+      <>
+        <div className="text-red-500">Oh no, something went wrong!</div>
+        <pre>{error.message}</pre>
+      </>
+    );
+  }
 };
 
 export default PostsRoute;
