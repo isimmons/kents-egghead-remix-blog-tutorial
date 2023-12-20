@@ -14,7 +14,7 @@ import { renderToPipeableStream } from "react-dom/server";
 
 import { getEnv, init } from "./env.server";
 
-init();
+if (process.env.NODE_ENV !== "test") init();
 
 global.ENV = getEnv();
 
